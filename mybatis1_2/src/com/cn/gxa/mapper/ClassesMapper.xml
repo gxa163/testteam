@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	namespace唯一表示此名字下的crud语句
+ -->
+<mapper namespace="com.cn.gxa.mapper.ClassesMapper">
+	<!-- 
+		id:唯一表示此crud语句
+		resultType:限定返回类型或泛型约束类型<>
+	 -->
+	<select id="selectAll" resultType="com.cn.gxa.orm.Classes">
+		select * from classes
+	</select>
+	<select id="selectLike" resultType="com.cn.gxa.orm.Classes">
+		select * from classes where name like #{name}
+	</select>
+	<delete id="deleteByid"  parameterType="java.lang.Long">
+		delete  from classes where id=#{id}
+	</delete>
+	
+	<insert id="insertCalsses"  parameterType="com.cn.gxa.orm.Classes">
+		insert into classes (id,name) values(classes_id.nextval,#{name})
+	</insert>
+	<!-- <insert id=""></insert> -->
+	
+	<update id="updateClasses" parameterType="com.cn.gxa.orm.Classes">
+		update classes set name=#{name} where id=#{id}
+	</update>
+	<select id="selectByIdandName" resultType="com.cn.gxa.orm.Classes" parameterType="java.util.Map">
+		 	select  *  from classes  where id=#{id} and name=#{name}
+	</select>
+</mapper>
