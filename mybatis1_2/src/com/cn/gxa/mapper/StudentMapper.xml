@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.gxa.mapper.StudentMapper">
+	<select id="all" resultType="com.cn.gxa.orm.Student">
+	select id as u_id,
+	 name as u_name,
+	 sex as u_sex,
+	 birth as u_birth,
+	 department as u_department,
+	 address as u_address,
+	 cl_id as u_cl_id
+	 from student
+	</select>
+	<!-- 定义类型 映射 -->
+	<resultMap type="com.cn.gxa.orm.Student" id="gxa_student">
+		<id column="id" property="u_id"></id>
+		<result column="name" property="u_name"/>
+		<result column="sex" property="u_sex"/>
+		<result column="birth" property="u_birth"/>
+		<result column="department" property="u_department"/>
+		<result column="address" property="u_address"/>
+		<result column="cl_id" property="u_cl_id"/>
+	</resultMap>	
+	<select id="resultMapStudent"  resultMap="gxa_student">
+		   select  *  from student
+	</select>
+	<select id="selectByNameAndSex" resultMap="gxa_student" parameterType="java.util.Map">
+		 	select  *  from student  where name like #{name} and sex=#{sex}
+	</select>
+	<select id="selectByIdandName" resultMap="gxa_student" parameterType="java.util.Map">
+		 	select  *  from student  where id=#{id} and name=#{name}
+	</select>
+	<select id="selectByIdGetName" resultType="java.lang.String" 
+		 parameterType="java.lang.String">
+			select  name  from   student where name=#{name}
+	</select>
+	<select id="selectByName" resultType="java.lang.String" 
+		  parameterType="com.cn.gxa.orm.Student">
+			select  sex  from   student where name='${u_name}'
+		</select>
+	<select id="selectByName2" resultType="java.lang.String" 
+		  parameterType="java.lang.String">
+			select  sex  from   student where name='${value}'
+	</select>
+	
+	<select id="selectByMode"  parameterType="java.util.Map" resultMap="gxa_student">
+			select   *  from  student
+			<where>
+				<if test="id!=null">
+					and id=#{id}
+				</if>
+				<if test="name!=null and  name!=''">
+				and name like  concat('%',concat(#{name},'%'))
+					<!--and name like  '%${name}%'-->	
+				</if>
+				<if test="startAge!=null  and   endAge!=null">
+					   and   to_char(sysdate,'yyyy')-to_char(birth,'yyyy')  between #{startAge}  and #{endAge}
+				</if>
+				
+				<if  test="department!=null  and  department!=''">
+					and  department=#{department}
+				</if>
+				<!-- <if test="startAge!=null">
+				  and  to_char(sysdate,'yyyy')-to_char(birth,'yyyy') >= #{startAge}
+				</if>
+				<if test="endAge!=null">
+				  and  to_char(sysdate,'yyyy')-to_char(birth,'yyyy') &lt= #{endAge}
+				</if>
+				<choose>
+					<when test=""></when>
+					<otherwise></otherwise>
+				</choose> -->
+			</where>
+		</select>
+		
+		<delete  id="deleteByManyId"  parameterType="java.util.List">
+		    delete  from student
+		    <where>
+		    <!--collection 被迭代的集合 item  迭代的元素    separator 每一轮循环 要分割的符号
+		     open  开始拼接的符号   close  结束要拼接的 符号
+		     -->
+		    		    <foreach collection="list"  item="no" separator="," open="id  in ("  close=")" >
+		    		       #{no}
+		    		      <!--  no是别名 随便取一个 -->
+		    		    </foreach>
+		    </where>
+		</delete>
+		<select id="selectById" resultMap="gxa_student" 
+		  parameterType="java.util.Map">
+			select   *  from  student where 1=1
+				<choose>
+					<when test="id!=null">and id=#{id}</when>
+					<when test="name!=null"> and name=#{name}</when>
+					<otherwise> or id=#{all}</otherwise>
+				</choose> 
+			
+		</select>
+</mapper>
