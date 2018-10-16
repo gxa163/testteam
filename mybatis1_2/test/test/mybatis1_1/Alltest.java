@@ -21,7 +21,7 @@ class Alltest {
 	public   void Before() {
 		SqlSessionFactory   factory=SQLSessionFactoryUtil.getSqlSessionFactory();
 		//���session 
-		System.out.println("���з���֮ǰ");
+		System.out.println("���з���֮ǰ");//输出
 		  session=factory.openSession();
 	}
 	@AfterEach
